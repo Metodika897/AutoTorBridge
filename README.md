@@ -18,6 +18,6 @@ reliability.
 **Usage:**
 
 1.  Login to your server using SSH.
-2.  Run the command `./command` (replace "command" ).
+2.  Run the command `apt update && apt install curl -y && curl https://raw.githubusercontent.com/Metodika897/AutoTorBridge/refs/heads/main/setup.sh | bash -s [replace with number between 1 and 8]`.
 3.  Copy the provided configuration at the end of the script 
 execution.
