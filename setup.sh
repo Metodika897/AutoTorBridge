@@ -252,7 +252,7 @@ fi
 cat > "$PODMAN_BUILD" <<EOF
 FROM docker.io/thetorproject/obfs4-bridge:0.21
 USER root
-RUN sed -i '19s/.*/        VVALUE=${V#*=}/' /usr/local/bin/start-tor.sh
+RUN sed -i '19s/.*/        VVALUE=\${V#*=}/' /usr/local/bin/start-tor.sh
 USER debian-tor
 EOF
 
