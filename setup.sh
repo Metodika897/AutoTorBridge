@@ -240,6 +240,24 @@ done
 nft add rule inet filter input counter drop # Drop everyting else
 nft list ruleset > /etc/nftables.conf
 
+# ----------------------------
+# BUG WORKAROUND
+# https://anonticket.torproject.org/user/projects/snowflake/issues/40461/details/
+# ----------------------------
+PODMAN_BUILD="/home/bridge_build/Containerfile"
+if [ ! -f "$PODMAN_BUILD" ]; then
+    mkdir -p "$PODMAN_BUILD"
+    rm -r "$PODMAN_BUILD"
+fi
+cat > "$PODMAN_BUILD" <<EOF
+FROM docker.io/thetorproject/obfs4-bridge:0.21
+USER root
+RUN sed -i '19s/.*/        VVALUE=${V#*=}/' /usr/local/bin/start-tor.sh
+USER debian-tor
+EOF
+
+podman build -t bridge -f $PODMAN_BUILD
+
 for ((i = 0 ; i < $bridges_count ; i++)); do
 
 # ----------------------------
@@ -255,7 +273,7 @@ fi
 cat > "$PODMAN" <<EOF
 services:
   obfs4-bridge:
-    image: docker.io/thetorproject/obfs4-bridge:latest
+    image: bridge
     environment:
       # Exit with an error message if OR_PORT is unset or empty.
       - OR_PORT=\${OR_PORT:?Env var OR_PORT is not set.}
@@ -289,9 +307,9 @@ OBFS4_ENABLE_ADDITIONAL_VARIABLES=1
 #Config
 OBFS4V_AssumeReachable=1
 OBFS4V_PublishServerDescriptor=0
+OBFS4V_ServerTransportOptions=obfs4 iat-mode=1
 #ExitPolicy does not make any diffrence in this configuration
 #OBFS4V_ExitPolicy=reject *:*
-#IAT? https://archive.torproject.org/websites/lists.torproject.org/pipermail/tor-relays/2021-February/019370.html
 EOF
 
 # ----------------------------
