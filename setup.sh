@@ -307,7 +307,7 @@ OBFS4_ENABLE_ADDITIONAL_VARIABLES=1
 #Config
 OBFS4V_AssumeReachable=1
 OBFS4V_PublishServerDescriptor=0
-OBFS4V_ServerTransportOptions=obfs4 iat-mode=1
+OBFS4V_ServerTransportOptions=obfs4 iat-mode=2
 #ExitPolicy does not make any diffrence in this configuration
 #OBFS4V_ExitPolicy=reject *:*
 EOF
